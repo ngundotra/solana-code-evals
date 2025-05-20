@@ -14,9 +14,7 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v3
-      - name: Build image
-        run: docker build -t solana-eval .
       - name: Run hello-world tests
         run: |
-          docker run --rm -v ${{ github.workspace }}:/workspace solana-eval \
-            ./scripts/test_example.sh basics/hello-world
+          chmod +x ./scripts/test_example.sh ./scripts/run_tests.sh
+          ./scripts/run_tests.sh basics/hello-world
