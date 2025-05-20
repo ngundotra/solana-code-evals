@@ -1,0 +1,4 @@
+# Ignore node modules and environment files
+node_modules/
+submission-app/.env
+submission-app/.env.local
