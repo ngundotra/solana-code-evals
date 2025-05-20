@@ -3,10 +3,12 @@ FROM rust:1.73-slim AS builder
 
 # Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    pkg-config libssl-dev curl git ca-certificates npm && rm -rf /var/lib/apt/lists/*
+    pkg-config libssl-dev curl wget git ca-certificates npm && rm -rf /var/lib/apt/lists/*
 
 # Install Solana CLI and Anchor
-RUN curl -sSfL https://release.solana.com/v1.16.17/install | bash -s -- -y
+RUN curl -sSfL https://release.solana.com/v1.16.17/install -o install || \
+    (echo "Fallback to wget" && wget https://release.solana.com/v1.16.17/install -O install) && \
+    bash install -y && rm install
 ENV PATH="/root/.local/share/solana/install/active_release/bin:${PATH}"
 RUN npm install -g @coral-xyz/anchor-cli
 
@@ -18,8 +20,10 @@ RUN git clone https://github.com/solana-developers/program-examples.git \
 # Final image
 FROM rust:1.73-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    pkg-config libssl-dev curl git ca-certificates npm && rm -rf /var/lib/apt/lists/*
-RUN curl -sSfL https://release.solana.com/v1.16.17/install | bash -s -- -y
+    pkg-config libssl-dev curl wget git ca-certificates npm && rm -rf /var/lib/apt/lists/*
+RUN curl -sSfL https://release.solana.com/v1.16.17/install -o install || \
+    (echo "Fallback to wget" && wget https://release.solana.com/v1.16.17/install -O install) && \
+    bash install -y && rm install
 ENV PATH="/root/.local/share/solana/install/active_release/bin:${PATH}"
 RUN npm install -g @coral-xyz/anchor-cli
 

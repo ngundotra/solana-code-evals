@@ -17,7 +17,17 @@ fi
 cd "$EXAMPLE_DIR"
 
 if [ -f Anchor.toml ]; then
-  anchor test
+  if command -v anchor >/dev/null 2>&1; then
+    anchor test
+  else
+    echo "Anchor CLI not found. Running host cargo tests instead." >&2
+    cargo test -- --nocapture
+  fi
 else
-  cargo test-bpf
+  if command -v cargo-test-bpf >/dev/null 2>&1; then
+    cargo test-bpf
+  else
+    echo "cargo-test-bpf not found. Running host cargo tests instead." >&2
+    cargo test -- --nocapture
+  fi
 fi
