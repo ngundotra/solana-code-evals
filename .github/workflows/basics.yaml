@@ -17,5 +17,6 @@ jobs:
       - name: Build image
         run: docker build -t solana-eval .
       - name: Run hello-world tests
-        run: docker run --rm -v ${{ github.workspace }}:/workspace solana-eval \
-               ./scripts/test_example.sh basics/hello-world
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/workspace solana-eval \
+            ./scripts/test_example.sh basics/hello-world
